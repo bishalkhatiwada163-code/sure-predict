@@ -1,0 +1,2505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Matches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to bottom, #f5f5f5 0%, #e8eaf6 100%);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+            min-height: 100vh;
+            background-attachment: fixed;
+        }
+
+        .header-brand {
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-brand::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: 0;
+        }
+
+        .video-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .header-brand::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 5px 15px rgba(255, 215, 0, 0.5));
+            animation: logoFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .brand-name {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(45deg, #fff, #ffd700, #fff, #00f5ff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: gradientFlow 4s ease infinite;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+            font-family: 'Impact', 'Arial Black', sans-serif;
+        }
+
+        @keyframes gradientFlow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .brand-tagline {
+            color: #ffd700;
+            font-size: 14px;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+            text-transform: uppercase;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        nav {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none !important;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .home-link {
+            background-color: #ff6b6b;
+            font-weight: 700;
+            padding: 10px 20px !important;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .home-link:hover {
+            background-color: #ff5252 !important;
+            transform: translateY(-3px) !important;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .dropdown-toggle::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-toggle::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-width: 220px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            margin-top: 10px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            padding: 10px 0;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+
+        .league-logo {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            background: white;
+            border-radius: 4px;
+            padding: 3px;
+        }
+
+        .dropdown-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding-left: 25px;
+            transform: none;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            min-width: 350px;
+            max-width: 450px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-suggestions.show {
+            display: block;
+        }
+
+        .suggestion-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .suggestion-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 5px;
+        }
+
+        .suggestion-league {
+            font-size: 11px;
+            color: #667eea;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .suggestion-match {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .suggestion-teams {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .suggestion-team {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .suggestion-team-logo {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            border-radius: 4px;
+        }
+
+        .suggestion-vs {
+            color: #999;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .suggestion-time {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .suggestion-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        .suggestion-badge.live {
+            background: linear-gradient(135deg, #ff0844 0%, #ff3333 100%);
+            color: white;
+        }
+
+        .suggestion-badge.upcoming {
+            background: #e8eaf6;
+            color: #667eea;
+        }
+
+        .no-results {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Prediction Modal */
+        .prediction-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .prediction-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 900px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        .modal-match-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .modal-team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-team-logo {
+            width: 60px;
+            height: 60px;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-team-name {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-vs {
+            font-size: 24px;
+            font-weight: 800;
+            opacity: 0.9;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .prediction-section {
+            margin-bottom: 25px;
+        }
+
+        .prediction-section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .prediction-section-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 2px;
+        }
+
+        .team-form {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .form-team-name {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .form-matches {
+            display: flex;
+            gap: 8px;
+        }
+
+        .form-badge {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .form-badge.win {
+            background: #4caf50;
+            color: white;
+        }
+
+        .form-badge.draw {
+            background: #ff9800;
+            color: white;
+        }
+
+        .form-badge.loss {
+            background: #f44336;
+            color: white;
+        }
+
+        .injuries-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .injury-item {
+            background: #fff5f5;
+            padding: 12px;
+            border-radius: 10px;
+            border-left: 3px solid #ff0844;
+        }
+
+        .injury-player {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .injury-type {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .home-advantage {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #4caf50;
+        }
+
+        .advantage-text {
+            font-size: 16px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .advantage-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4caf50;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .prediction-result {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .prediction-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .prediction-outcome {
+            font-size: 32px;
+            font-weight: 800;
+            margin: 15px 0;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .prediction-confidence {
+            font-size: 16px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: white;
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .search-bar {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            width: 250px;
+            font-size: 14px;
+            outline: none;
+            transition: width 0.3s ease;
+        }
+
+        .search-bar:focus {
+            width: 300px;
+        }
+
+        .search-btn {
+            background-color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin-left: -50px;
+            border-radius: 0 25px 25px 0;
+            cursor: pointer;
+            color: #667eea;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background-color: #f0f0f0;
+        }
+
+        .content {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .welcome-text {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .matches-section {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .league-section {
+            margin-bottom: 40px;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .league-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .league-header svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .league-header h2 {
+            color: #333;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .match-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid #667eea;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .match-time {
+            color: #667eea;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .teams-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+
+        .team-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 16px;
+            margin-top: 8px;
+        }
+
+        .team-logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            padding: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .vs {
+            color: #999;
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .match-info {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .match-status {
+            background: #ffd700;
+            color: #333;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .match-status.live {
+            background: linear-gradient(135deg, #ff0844 0%, #ff3333 100%);
+            color: white;
+            animation: livePulse 1.5s infinite;
+            box-shadow: 0 0 15px rgba(255, 8, 68, 0.4);
+            position: relative;
+            padding: 7px 18px 7px 28px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .match-status.live::before {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: white;
+            border-radius: 50%;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: blink 1s infinite;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes livePulse {
+            0%, 100% { 
+                opacity: 1;
+                box-shadow: 0 0 20px rgba(255, 8, 68, 0.6);
+            }
+            50% { 
+                opacity: 0.9;
+                box-shadow: 0 0 30px rgba(255, 8, 68, 0.9);
+            }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .match-score {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin: 0 15px;
+        }
+
+        .live-score-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .live-score-display {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 38px;
+            font-weight: 700;
+            color: #ff0844;
+            text-shadow: 0 2px 8px rgba(255, 8, 68, 0.2);
+            letter-spacing: 1px;
+        }
+
+        .live-match-time {
+            background: linear-gradient(135deg, #ff0844 0%, #ff3333 100%);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 3px 12px rgba(255, 8, 68, 0.35);
+            animation: timeGlow 2s infinite;
+            letter-spacing: 0.5px;
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+        }
+
+        @keyframes timeGlow {
+            0%, 100% { 
+                box-shadow: 0 3px 15px rgba(255, 8, 68, 0.4);
+            }
+            50% { 
+                box-shadow: 0 3px 25px rgba(255, 8, 68, 0.7);
+            }
+        }
+
+        .live-time {
+            color: #ff3333;
+            font-weight: 700;
+            font-size: 14px;
+        .match-card.live-match {
+            border-left: 4px solid #ff0844;
+            background: linear-gradient(135deg, #fff8f9 0%, #ffffff 100%);
+            box-shadow: 0 3px 10px rgba(255, 8, 68, 0.12);
+            position: relative;
+        }
+
+        .match-card.live-match::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff0844 0%, #ff3333 50%, #ff0844 100%);
+            animation: liveBorder 2s linear infinite;
+            background-size: 200% 100%;
+            opacity: 0.8;
+        }
+
+        @keyframes liveBorder {
+            0% { background-position: 0% 0%; }
+            100% { background-position: 200% 0%; }
+        }
+
+        .match-card.live-match:hover {
+            box-shadow: 0 8px 25px rgba(255, 8, 68, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .match-prediction {
+            color: #667eea;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            text-decoration: none !important;
+        }
+
+        .match-prediction:hover {
+            color: #764ba2;
+            text-decoration: none !important;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .search-bar {
+                width: 200px;
+            }
+
+            .search-bar:focus {
+                width: 220px;
+            }
+            .brand-tagline {
+                font-size: 11px;
+                letter-spacing: 2px;
+            }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+                margin: 0 auto 10px;
+            }
+
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .league-header h2 {
+                font-size: 20px;
+            }
+
+            .team-name {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-brand">
+        <video class="video-background" autoplay muted loop playsinline>
+            <source src="football.mp4" type="video/mp4">
+        </video>
+        <div class="logo">
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <!-- Outer Circle with Gradient -->
+                <defs>
+                    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+                        <stop offset="50%" style="stop-color:#00f5ff;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#ff6b6b;stop-opacity:1" />
+                    </linearGradient>
+                    <linearGradient id="crystalBall" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:0.9" />
+                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:0.9" />
+                    </linearGradient>
+                </defs>
+                
+                <!-- Crystal Ball Base -->
+                <ellipse cx="100" cy="170" rx="35" ry="8" fill="url(#logoGradient)" opacity="0.6"/>
+                
+                <!-- Crystal Ball Stand -->
+                <path d="M 85 160 Q 90 170 100 170 Q 110 170 115 160" fill="url(#logoGradient)" stroke="url(#logoGradient)" stroke-width="2"/>
+                
+                <!-- Main Crystal Ball -->
+                <circle cx="100" cy="100" r="65" fill="url(#crystalBall)" stroke="url(#logoGradient)" stroke-width="4"/>
+                
+                <!-- Shine Effect -->
+                <ellipse cx="85" cy="80" rx="20" ry="25" fill="white" opacity="0.3"/>
+                <ellipse cx="75" cy="70" rx="8" ry="12" fill="white" opacity="0.5"/>
+                
+                <!-- Star Symbol (Prediction) -->
+                <path d="M 100 60 L 108 80 L 130 85 L 112 100 L 115 122 L 100 110 L 85 122 L 88 100 L 70 85 L 92 80 Z" 
+                      fill="#ffd700" stroke="white" stroke-width="2" opacity="0.9"/>
+                
+                <!-- Sparkles -->
+                <circle cx="130" cy="70" r="3" fill="#ffd700" opacity="0.8">
+                    <animate attributeName="opacity" values="0.8;1;0.8" dur="2s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="70" cy="120" r="2.5" fill="#00f5ff" opacity="0.8">
+                    <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+                </circle>
+                <circle cx="140" cy="110" r="2" fill="#ff6b6b" opacity="0.8">
+                    <animate attributeName="opacity" values="0.8;1;0.8" dur="1.8s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+        </div>
+        <h1 class="brand-name">Sure Predict</h1>
+        <p class="brand-tagline">Your Gateway to Match Predictions</p>
+    </div>
+</head>
+<body>
+    <!-- API Setup Banner -->
+    <div id="apiSetupBanner" style="background: linear-gradient(135deg, #ff9800 0%, #ff5722 100%); color: white; padding: 15px 20px; text-align: center; font-size: 14px; display: none;">
+        <strong>🚀 Backend Setup Required:</strong> Run <code style="background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 3px;">npm install && npm start</code> to enable live data. 
+        See <strong>DEPLOYMENT.md</strong> for production deployment to Railway, Vercel, or AWS.
+        <button onclick="document.getElementById('apiSetupBanner').style.display='none'" style="background: rgba(255,255,255,0.3); border: none; color: white; padding: 5px 15px; margin-left: 15px; border-radius: 5px; cursor: pointer;">Got it!</button>
+    </div>
+    <nav>
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="#home" class="active home-link">🏠 Home</a></li>
+                <li><a href="#live">Live Matches</a></li>
+                <li><a href="#upcoming">Upcoming Matches</a></li>
+                <li class="dropdown">
+                    <a href="#leagues" class="dropdown-toggle">Top Leagues</a>
+                    <div class="dropdown-menu">
+                        <a href="#premier-league">
+                            <img src="https://crests.football-data.org/PL.png" alt="Premier League" class="league-logo" onerror="this.src='https://via.placeholder.com/28/37003c/FFFFFF?text=PL'">
+                            Premier League
+                        </a>
+                        <a href="#la-liga">
+                            <img src="https://crests.football-data.org/PD.png" alt="La Liga" class="league-logo" onerror="this.src='https://via.placeholder.com/28/FF4444/FFFFFF?text=LL'">
+                            La Liga
+                        </a>
+                        <a href="#bundesliga">
+                            <img src="https://crests.football-data.org/BL1.png" alt="Bundesliga" class="league-logo" onerror="this.src='https://via.placeholder.com/28/D20515/FFFFFF?text=BL'">
+                            Bundesliga
+                        </a>
+                        <a href="#serie-a">
+                            <img src="https://crests.football-data.org/SA.png" alt="Serie A" class="league-logo" onerror="this.src='https://via.placeholder.com/28/024494/FFFFFF?text=SA'">
+                            Serie A
+                        </a>
+                        <a href="#ligue-1">
+                            <img src="https://crests.football-data.org/FL1.png" alt="Ligue 1" class="league-logo" onerror="this.src='https://via.placeholder.com/28/0B3769/FFFFFF?text=L1'">
+                            Ligue 1
+                        </a>
+                        <a href="#champions-league">
+                            <img src="https://crests.football-data.org/CL.png" alt="Champions League" class="league-logo" onerror="this.src='https://via.placeholder.com/28/003399/FFFFFF?text=UCL'">
+                            Champions League
+                        </a>
+                        <a href="#europa-league">
+                            <img src="https://crests.football-data.org/EC.png" alt="Europa League" class="league-logo" onerror="this.src='https://via.placeholder.com/28/FF8C00/FFFFFF?text=UEL'">
+                            Europa League
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search matches...">
+                <button class="search-btn">Search</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="matches-section">
+        <!-- Premier League -->
+        <div class="league-section" id="premier-league">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" fill="#37003c"/>
+                    <text x="25" y="32" font-size="18" fill="white" text-anchor="middle" font-weight="bold">PL</text>
+                </svg>
+                <h2>Premier League</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 15:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/66.png" alt="Man United" onerror="this.src='https://via.placeholder.com/50/DA291C/FBE122?text=MU'">
+                            </div>
+                            <div class="team-name">Man United</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/64.png" alt="Liverpool" onerror="this.src='https://via.placeholder.com/50/C8102E/00B2A9?text=LFC'">
+                            </div>
+                            <div class="team-name">Liverpool</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 17:30 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/57.png" alt="Arsenal" onerror="this.src='https://via.placeholder.com/50/EF0107/FFFFFF?text=AFC'">
+                            </div>
+                            <div class="team-name">Arsenal</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/61.png" alt="Chelsea" onerror="this.src='https://via.placeholder.com/50/034694/FFFFFF?text=CFC'">
+                            </div>
+                            <div class="team-name">Chelsea</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+                <div class="match-card live-match">
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/65.png" alt="Man City" onerror="this.src='https://via.placeholder.com/50/6CABDD/1C2C5B?text=MCFC'">
+                            </div>
+                            <div class="team-name">Man City</div>
+                        </div>
+                        <div class="live-score-container">
+                            <div class="live-score-display">2 - 1</div>
+                            <div class="live-match-time">67'</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/73.png" alt="Tottenham" onerror="this.src='https://via.placeholder.com/50/132257/FFFFFF?text=TOT'">
+                            </div>
+                            <div class="team-name">Tottenham</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status live">LIVE</span>
+                        <span class="match-prediction">View Stats →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- La Liga -->
+        <div class="league-section" id="la-liga">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" fill="#FF4444"/>
+                    <text x="25" y="32" font-size="18" fill="white" text-anchor="middle" font-weight="bold">LL</text>
+                </svg>
+                <h2>La Liga</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 20:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/86.png" alt="Real Madrid" onerror="this.src='https://via.placeholder.com/50/FFFFFF/00529F?text=RM'">
+                            </div>
+                            <div class="team-name">Real Madrid</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/81.png" alt="Barcelona" onerror="this.src='https://via.placeholder.com/50/004D98/EDBB00?text=FCB'">
+                            </div>
+                            <div class="team-name">Barcelona</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+                <div class="match-card">
+                    <div class="match-time">⏰ Tomorrow, 18:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/78.png" alt="Atletico Madrid" onerror="this.src='https://via.placeholder.com/50/CE3524/FFFFFF?text=ATM'">
+                            </div>
+                            <div class="team-name">Atletico Madrid</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/559.png" alt="Sevilla" onerror="this.src='https://via.placeholder.com/50/FFFFFF/F43333?text=SFC'">
+                            </div>
+                            <div class="team-name">Sevilla</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+                <div class="match-card live-match">
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/90.png" alt="Valencia" onerror="this.src='https://via.placeholder.com/50/FF8C00/FFFFFF?text=VAL'">
+                            </div>
+                            <div class="team-name">Valencia</div>
+                        </div>
+                        <div class="live-score-container">
+                            <div class="live-score-display">1 - 3</div>
+                            <div class="live-match-time">82'</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/78.png" alt="Atletico Madrid" onerror="this.src='https://via.placeholder.com/50/CE3524/FFFFFF?text=ATM'">
+                            </div>
+                            <div class="team-name">Atletico Madrid</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status live">LIVE</span>
+                        <span class="match-prediction">View Stats →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bundesliga -->
+        <div class="league-section" id="bundesliga">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" fill="#D20515"/>
+                    <text x="25" y="32" font-size="18" fill="white" text-anchor="middle" font-weight="bold">BL</text>
+                </svg>
+                <h2>Bundesliga</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 16:30 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/5.png" alt="Bayern Munich" onerror="this.src='https://via.placeholder.com/50/DC052D/0066B2?text=FCB'">
+                            </div>
+                            <div class="team-name">Bayern Munich</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/4.png" alt="Dortmund" onerror="this.src='https://via.placeholder.com/50/FDE100/000000?text=BVB'">
+                            </div>
+                            <div class="team-name">Dortmund</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+                <div class="match-card live-match">
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/721.png" alt="RB Leipzig" onerror="this.src='https://via.placeholder.com/50/DD0741/FFFFFF?text=RBL'">
+                            </div>
+                            <div class="team-name">RB Leipzig</div>
+                        </div>
+                        <div class="live-score-container">
+                            <div class="live-score-display">0 - 0</div>
+                            <div class="live-match-time">45+2'</div>
+                        </div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/5.png" alt="Bayern Munich" onerror="this.src='https://via.placeholder.com/50/DC052D/0066B2?text=FCB'">
+                            </div>
+                            <div class="team-name">Bayern Munich</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status live">LIVE</span>
+                        <span class="match-prediction">View Stats →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Serie A -->
+        <div class="league-section" id="serie-a">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" fill="#024494"/>
+                    <text x="25" y="32" font-size="18" fill="white" text-anchor="middle" font-weight="bold">SA</text>
+                </svg>
+                <h2>Serie A</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 19:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/109.png" alt="Juventus" onerror="this.src='https://via.placeholder.com/50/000000/FFFFFF?text=JUV'">
+                            </div>
+                            <div class="team-name">Juventus</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/98.png" alt="AC Milan" onerror="this.src='https://via.placeholder.com/50/FB090B/000000?text=ACM'">
+                            </div>
+                            <div class="team-name">AC Milan</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ligue 1 -->
+        <div class="league-section" id="ligue-1">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="50" height="50" fill="#0B3769"/>
+                    <text x="25" y="32" font-size="18" fill="white" text-anchor="middle" font-weight="bold">L1</text>
+                </svg>
+                <h2>Ligue 1</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Today, 20:45 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/524.png" alt="PSG" onerror="this.src='https://via.placeholder.com/50/004170/DA0812?text=PSG'">
+                            </div>
+                            <div class="team-name">PSG</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/516.png" alt="Marseille" onerror="this.src='https://via.placeholder.com/50/2FAEE0/FFFFFF?text=OM'">
+                            </div>
+                            <div class="team-name">Marseille</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Champions League -->
+        <div class="league-section" id="champions-league">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="uclGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#003399"/>
+                            <stop offset="100%" style="stop-color:#0055AA"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="50" height="50" fill="url(#uclGrad2)"/>
+                    <circle cx="25" cy="25" r="15" fill="none" stroke="white" stroke-width="2"/>
+                    <path d="M 25 12 L 30 22 L 38 22 L 32 28 L 34 38 L 25 32 L 16 38 L 18 28 L 12 22 L 20 22 Z" fill="white"/>
+                </svg>
+                <h2>Champions League</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Tomorrow, 20:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/65.png" alt="Man City" onerror="this.src='https://via.placeholder.com/50/6CABDD/1C2C5B?text=MCFC'">
+                            </div>
+                            <div class="team-name">Man City</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/108.png" alt="Inter Milan" onerror="this.src='https://via.placeholder.com/50/0068A8/000000?text=INT'">
+                            </div>
+                            <div class="team-name">Inter Milan</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Europa League -->
+        <div class="league-section" id="europa-league">
+            <div class="league-header">
+                <svg viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="uelGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" style="stop-color:#FF8C00"/>
+                            <stop offset="100%" style="stop-color:#FFA500"/>
+                        </linearGradient>
+                    </defs>
+                    <rect width="50" height="50" fill="url(#uelGrad2)"/>
+                    <text x="25" y="35" font-size="22" fill="white" text-anchor="middle" font-weight="bold">UEL</text>
+                </svg>
+                <h2>Europa League</h2>
+            </div>
+            <div class="matches-grid">
+                <div class="match-card">
+                    <div class="match-time">⏰ Tomorrow, 18:00 GMT</div>
+                    <div class="teams-container">
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/563.png" alt="West Ham" onerror="this.src='https://via.placeholder.com/50/7A263A/1BB1E7?text=WHU'">
+                            </div>
+                            <div class="team-name">West Ham</div>
+                        </div>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-logo">
+                                <img src="https://crests.football-data.org/100.png" alt="Roma" onerror="this.src='https://via.placeholder.com/50/A3171B/F2B232?text=AS'">
+                            </div>
+                            <div class="team-name">Roma</div>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <span class="match-status">Upcoming</span>
+                        <span class="match-prediction">View Prediction →</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prediction Modal -->
+    <div class="prediction-modal" id="predictionModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closePredictionModal()">&times;</button>
+                <h2 style="margin: 0;">Match Prediction Analysis</h2>
+                <div class="modal-match-title" id="modalMatchTitle">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="prediction-section">
+                    <div class="prediction-section-title">📊 Recent Form (Last 5 Matches)</div>
+                    <div class="team-form" id="teamForm">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <div class="prediction-section">
+                    <div class="prediction-section-title">🏥 Injury Report</div>
+                    <div class="injuries-list" id="injuriesList">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <div class="prediction-section">
+                    <div class="prediction-section-title">🏟️ Home Advantage</div>
+                    <div class="home-advantage" id="homeAdvantage">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <div class="prediction-section">
+                    <div class="prediction-result" id="predictionResult">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*
+        ═══════════════════════════════════════════════════════════════════════
+        🔴 LIVE DATA SETUP INSTRUCTIONS
+        ═══════════════════════════════════════════════════════════════════════
+        
+        To enable REAL-TIME match data, live scores, and statistics:
+        
+        1. Go to: https://www.football-data.org/client/register
+        2. Sign up for a FREE account (no credit card required)
+        3. Get your API key from your dashboard
+        4. Replace 'YOUR_API_KEY_HERE' below with your actual API key
+        5. Save and refresh the page
+        
+        Features enabled with API:
+        ✓ Live match scores updating every 30 seconds
+        ✓ Real team logos and crests
+        ✓ Actual match schedules and times
+        ✓ Real team statistics for predictions
+        ✓ Current league standings
+        
+        Free tier includes: 10 requests/minute, all major European leagues
+        
+        ═══════════════════════════════════════════════════════════════════════
+        */
+        
+        // ═══════════════════════════════════════════════════════════════════════
+        // BACKEND API CONFIGURATION (Production Ready)
+        // ═══════════════════════════════════════════════════════════════════════
+        
+        // Change this to your deployed backend URL
+        const BACKEND_URL = window.location.hostname === 'localhost' 
+            ? 'http://localhost:3001'  // Local development
+            : 'https://your-app.railway.app'; // Production URL (update after deployment)
+        
+        // Store for live match data
+        let liveMatchesData = {};
+        let allMatchesData = {};
+        let isBackendAvailable = false;
+
+        // Check if backend is available
+        async function checkBackend() {
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/health`);
+                if (response.ok) {
+                    isBackendAvailable = true;
+                    console.log('%c✓ Backend connected!', 'color: green; font-size: 16px; font-weight: bold;');
+                    return true;
+                }
+            } catch (error) {
+                console.log('%c⚠️ Backend not available - using demo data', 'color: orange; font-size: 14px;');
+                console.log('%cRun: npm install && npm start', 'color: blue; font-size: 12px;');
+            }
+            return false;
+        }
+
+        // Fetch live matches from backend
+        async function fetchLiveMatches() {
+            if (!isBackendAvailable) {
+                return; // Use demo data
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/matches/live`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const matches = data.data || [];
+                    
+                    matches.forEach(match => {
+                        const key = `${match.teams.home.name} vs ${match.teams.away.name}`;
+                        liveMatchesData[key] = match;
+                    });
+
+                    updateLiveScores();
+                    console.log(`✓ Fetched ${matches.length} live matches`);
+                }
+            } catch (error) {
+                console.log('Error fetching live matches:', error.message);
+            }
+        }
+
+        // Fetch upcoming matches from backend
+        async function fetchUpcomingMatches() {
+            if (!isBackendAvailable) {
+                return; // Use demo data
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/matches/upcoming`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const matches = data.data || [];
+                    
+                    matches.forEach(match => {
+                        const key = `${match.teams.home.name} vs ${match.teams.away.name}`;
+                        allMatchesData[key] = match;
+                    });
+
+                    console.log(`✓ Fetched ${matches.length} upcoming matches`);
+                }
+            } catch (error) {
+                console.log('Error fetching upcoming matches:', error.message);
+            }
+        }
+
+        // Fetch team statistics and injuries from backend
+        async function fetchTeamData(teamId) {
+            if (!isBackendAvailable) {
+                return null;
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/team/${teamId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.data;
+                }
+            } catch (error) {
+                console.log('Could not fetch team data');
+            }
+            return null;
+        }
+
+        // Fetch team injuries from backend
+        async function fetchTeamInjuries(teamId) {
+            if (!isBackendAvailable) {
+                return [];
+            }
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/team/${teamId}/injuries`);
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.data || [];
+                }
+            } catch (error) {
+                console.log('Could not fetch injuries');
+            }
+            return [];
+        }
+
+        // Update live scores on the page
+        function updateLiveScores() {
+            document.querySelectorAll('.match-card.live-match').forEach(card => {
+                const teamNames = card.querySelectorAll('.team-name');
+                if (teamNames.length >= 2) {
+                    const homeTeam = teamNames[0].textContent.trim();
+                    const awayTeam = teamNames[1].textContent.trim();
+                    const matchKey = `${homeTeam} vs ${awayTeam}`;
+                    
+                    const liveData = liveMatchesData[matchKey];
+                    if (liveData) {
+                        const scoreDisplay = card.querySelector('.live-score-display');
+                        const timeDisplay = card.querySelector('.live-match-time');
+                        
+                        if (scoreDisplay) {
+                            scoreDisplay.textContent = `${liveData.score.fullTime.home || 0} - ${liveData.score.fullTime.away || 0}`;
+                        }
+                        if (timeDisplay && liveData.minute) {
+                            timeDisplay.textContent = `${liveData.minute}'`;
+                        }
+                    }
+                }
+            });
+        }
+
+        // Fetch match statistics for prediction
+        async function fetchMatchStatistics(matchId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/matches/${matchId}`, {
+                    headers: { 'X-Auth-Token': API_KEY }
+                });
+                if (response.ok) {
+                    return await response.json();
+                }
+            } catch (error) {
+                console.log('Could not fetch match statistics');
+            }
+            return null;
+        }
+
+        // Initialize live data fetching
+        async function initializeLiveData() {
+            console.log('%c═══════════════════════════════════════', 'color: purple; font-size: 14px;');
+            console.log('%c🔮 SURE PREDICT - Initializing...', 'color: purple; font-size: 16px; font-weight: bold;');
+            console.log('%c═══════════════════════════════════════', 'color: purple; font-size: 14px;');
+            
+            // Check if backend is available
+            const backendAvailable = await checkBackend();
+            
+            if (!backendAvailable) {
+                document.getElementById('apiSetupBanner').style.display = 'block';
+                console.log('%c📖 SETUP INSTRUCTIONS:', 'color: orange; font-size: 14px; font-weight: bold;');
+                console.log('%c1. Install dependencies: npm install', 'color: blue; font-size: 12px;');
+                console.log('%c2. Configure API key in server.js', 'color: blue; font-size: 12px;');
+                console.log('%c3. Start backend: npm start', 'color: blue; font-size: 12px;');
+                console.log('%c4. Refresh this page', 'color: blue; font-size: 12px;');
+                console.log('%c\nSee DEPLOYMENT.md for production setup', 'color: green; font-size: 12px;');
+                return;
+            }
+            
+            // Fetch initial data
+            await Promise.all([
+                fetchLiveMatches(),
+                fetchUpcomingMatches()
+            ]);
+            
+            // Update live scores every 30 seconds
+            setInterval(fetchLiveMatches, 30000);
+            
+            console.log('%c✓ All systems operational!', 'color: green; font-size: 16px; font-weight: bold;');
+            console.log('%c═══════════════════════════════════════', 'color: purple; font-size: 14px;');
+        }
+
+        // Start fetching data when page loads
+        window.addEventListener('load', initializeLiveData);
+
+        // Active link highlighting and filtering
+        const navLinks = document.querySelectorAll('.nav-links a');
+        const leagueSections = document.querySelectorAll('.league-section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                const href = this.getAttribute('href');
+                
+                // Show all matches by default
+                leagueSections.forEach(section => {
+                    section.style.display = 'block';
+                    const matchCards = section.querySelectorAll('.match-card');
+                    matchCards.forEach(card => card.style.display = 'block');
+                });
+                
+                // Filter for live matches
+                if (href === '#live') {
+                    leagueSections.forEach(section => {
+                        const liveMatches = section.querySelectorAll('.match-card.live-match');
+                        const allMatches = section.querySelectorAll('.match-card');
+                        
+                        // Hide non-live matches
+                        allMatches.forEach(card => {
+                            if (!card.classList.contains('live-match')) {
+                                card.style.display = 'none';
+                            }
+                        });
+                        
+                        // Hide section if no live matches
+                        if (liveMatches.length === 0) {
+                            section.style.display = 'none';
+                        }
+                    });
+                }
+                
+                // Filter for upcoming matches
+                if (href === '#upcoming') {
+                    leagueSections.forEach(section => {
+                        const upcomingMatches = section.querySelectorAll('.match-card:not(.live-match)');
+                        const liveMatches = section.querySelectorAll('.match-card.live-match');
+                        
+                        // Hide live matches
+                        liveMatches.forEach(card => {
+                            card.style.display = 'none';
+                        });
+                        
+                        // Hide section if no upcoming matches
+                        if (upcomingMatches.length === 0) {
+                            section.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+
+        // Search functionality with live suggestions
+        const searchBtn = document.querySelector('.search-btn');
+        const searchBar = document.querySelector('.search-bar');
+        const searchContainer = document.querySelector('.search-container');
+        
+        // Create suggestions dropdown
+        const suggestionsDiv = document.createElement('div');
+        suggestionsDiv.className = 'search-suggestions';
+        searchContainer.appendChild(suggestionsDiv);
+
+        // Live search as user types
+        searchBar.addEventListener('input', function() {
+            const searchQuery = this.value.trim().toLowerCase();
+            
+            if (searchQuery.length === 0) {
+                suggestionsDiv.classList.remove('show');
+                suggestionsDiv.innerHTML = '';
+                return;
+            }
+            
+            // Collect all matching results
+            const results = [];
+            
+            leagueSections.forEach(section => {
+                const leagueName = section.querySelector('.league-header h2').textContent;
+                const matchCards = section.querySelectorAll('.match-card');
+                
+                matchCards.forEach(card => {
+                    const teamNames = Array.from(card.querySelectorAll('.team-name'));
+                    const teamLogos = Array.from(card.querySelectorAll('.team-logo img'));
+                    const matchTime = card.querySelector('.match-time')?.textContent || '';
+                    const isLive = card.classList.contains('live-match');
+                    
+                    // Check if any team name matches
+                    const matchingTeams = teamNames.filter(team => 
+                        team.textContent.toLowerCase().includes(searchQuery)
+                    );
+                    
+                    if (matchingTeams.length > 0 || leagueName.toLowerCase().includes(searchQuery)) {
+                        results.push({
+                            league: leagueName,
+                            teams: teamNames.map(t => t.textContent),
+                            logos: teamLogos.map(img => img.src),
+                            time: matchTime,
+                            isLive: isLive,
+                            element: card,
+                            section: section,
+                            relevance: matchingTeams.length * 2 + (leagueName.toLowerCase().includes(searchQuery) ? 1 : 0)
+                        });
+                    }
+                });
+            });
+            
+            // Sort by relevance and limit to top 5 results
+            results.sort((a, b) => b.relevance - a.relevance);
+            const topResults = results.slice(0, 5);
+            
+            // Display suggestions
+            if (topResults.length > 0) {
+                suggestionsDiv.innerHTML = topResults.map(result => `
+                    <div class="suggestion-item" data-section="${result.section.id}">
+                        <div class="suggestion-header">
+                            <span class="suggestion-league">${result.league}</span>
+                            <span class="suggestion-badge ${result.isLive ? 'live' : 'upcoming'}">
+                                ${result.isLive ? 'LIVE' : 'UPCOMING'}
+                            </span>
+                        </div>
+                        <div class="suggestion-match">
+                            <div class="suggestion-teams">
+                                <div class="suggestion-team">
+                                    <img src="${result.logos[0]}" alt="${result.teams[0]}" class="suggestion-team-logo">
+                                    <span>${result.teams[0]}</span>
+                                </div>
+                                <span class="suggestion-vs">vs</span>
+                                <div class="suggestion-team">
+                                    <img src="${result.logos[1]}" alt="${result.teams[1]}" class="suggestion-team-logo">
+                                    <span>${result.teams[1]}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="suggestion-time">${result.time}</div>
+                    </div>
+                `).join('');
+                suggestionsDiv.classList.add('show');
+                
+                // Add click handlers to suggestions
+                document.querySelectorAll('.suggestion-item').forEach(item => {
+                    item.addEventListener('click', function() {
+                        const sectionId = this.getAttribute('data-section');
+                        const targetSection = document.getElementById(sectionId);
+                        
+                        if (targetSection) {
+                            // Show all matches
+                            leagueSections.forEach(section => {
+                                section.style.display = 'block';
+                                const matchCards = section.querySelectorAll('.match-card');
+                                matchCards.forEach(card => card.style.display = 'block');
+                            });
+                            
+                            // Scroll to section
+                            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            
+                            // Clear search and hide suggestions
+                            searchBar.value = '';
+                            suggestionsDiv.classList.remove('show');
+                        }
+                    });
+                });
+            } else {
+                suggestionsDiv.innerHTML = '<div class="no-results">No matches found</div>';
+                suggestionsDiv.classList.add('show');
+            }
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchContainer.contains(e.target)) {
+                suggestionsDiv.classList.remove('show');
+            }
+        });
+
+        // Search button click
+        searchBtn.addEventListener('click', function() {
+            const searchQuery = searchBar.value.trim().toLowerCase();
+            if (searchQuery) {
+                leagueSections.forEach(section => {
+                    const leagueName = section.querySelector('.league-header h2').textContent.toLowerCase();
+                    const matchCards = section.querySelectorAll('.match-card');
+                    let hasMatch = false;
+                    
+                    matchCards.forEach(card => {
+                        const teamNames = card.querySelectorAll('.team-name');
+                        let matchFound = false;
+                        
+                        teamNames.forEach(team => {
+                            if (team.textContent.toLowerCase().includes(searchQuery)) {
+                                matchFound = true;
+                            }
+                        });
+                        
+                        if (matchFound || leagueName.includes(searchQuery)) {
+                            card.style.display = 'block';
+                            hasMatch = true;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                    
+                    section.style.display = hasMatch ? 'block' : 'none';
+                });
+                suggestionsDiv.classList.remove('show');
+            } else {
+                // Show all if search is empty
+                leagueSections.forEach(section => {
+                    section.style.display = 'block';
+                    const matchCards = section.querySelectorAll('.match-card');
+                    matchCards.forEach(card => card.style.display = 'block');
+                });
+            }
+        });
+
+        searchBar.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchBtn.click();
+            }
+        });
+
+        // Top Leagues dropdown navigation
+        const dropdownLinks = document.querySelectorAll('.dropdown-menu a');
+        dropdownLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    // Show all matches first
+                    leagueSections.forEach(section => {
+                        section.style.display = 'block';
+                        const matchCards = section.querySelectorAll('.match-card');
+                        matchCards.forEach(card => card.style.display = 'block');
+                    });
+                    
+                    // Update active nav link to Home
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    document.querySelector('.home-link').classList.add('active');
+                    
+                    // Smooth scroll to the league section
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Match data with predictions
+        const matchData = {
+            'Man United vs Liverpool': {
+                homeTeam: 'Man United',
+                awayTeam: 'Liverpool',
+                homeLogo: 'https://crests.football-data.org/66.png',
+                awayLogo: 'https://crests.football-data.org/64.png',
+                homeForm: ['W', 'D', 'W', 'L', 'W'],
+                awayForm: ['W', 'W', 'D', 'W', 'W'],
+                homeInjuries: [
+                    { player: 'Marcus Rashford', injury: 'Hamstring - 2 weeks' },
+                    { player: 'Lisandro Martinez', injury: 'Knee - Doubtful' }
+                ],
+                awayInjuries: [
+                    { player: 'Thiago Alcantara', injury: 'Hip - Out' }
+                ],
+                homeAdvantage: {
+                    text: 'Man United playing at Old Trafford, where they have won 70% of their home matches this season.',
+                    winRate: '70%',
+                    goals: '2.3',
+                    cleanSheets: '45%'
+                }
+            },
+            'Arsenal vs Chelsea': {
+                homeTeam: 'Arsenal',
+                awayTeam: 'Chelsea',
+                homeLogo: 'https://crests.football-data.org/57.png',
+                awayLogo: 'https://crests.football-data.org/61.png',
+                homeForm: ['W', 'W', 'W', 'D', 'W'],
+                awayForm: ['D', 'L', 'W', 'D', 'L'],
+                homeInjuries: [
+                    { player: 'Gabriel Jesus', injury: 'Ankle - Doubtful' }
+                ],
+                awayInjuries: [
+                    { player: 'Reece James', injury: 'Hamstring - Out' },
+                    { player: 'Wesley Fofana', injury: 'Knee - 3 weeks' }
+                ],
+                homeAdvantage: {
+                    text: 'Arsenal at the Emirates Stadium with exceptional form, winning 85% of home matches.',
+                    winRate: '85%',
+                    goals: '2.8',
+                    cleanSheets: '60%'
+                }
+            },
+            'Man City vs Tottenham': {
+                homeTeam: 'Man City',
+                awayTeam: 'Tottenham',
+                homeLogo: 'https://crests.football-data.org/65.png',
+                awayLogo: 'https://crests.football-data.org/73.png',
+                homeForm: ['W', 'W', 'W', 'W', 'D'],
+                awayForm: ['L', 'W', 'D', 'L', 'W'],
+                homeInjuries: [],
+                awayInjuries: [
+                    { player: 'Cristian Romero', injury: 'Foot - Out' },
+                    { player: 'Richarlison', injury: 'Calf - Doubtful' }
+                ],
+                homeAdvantage: {
+                    text: 'Man City dominating at the Etihad with 90% home win rate this season.',
+                    winRate: '90%',
+                    goals: '3.1',
+                    cleanSheets: '55%'
+                }
+            },
+            'Real Madrid vs Barcelona': {
+                homeTeam: 'Real Madrid',
+                awayTeam: 'Barcelona',
+                homeLogo: 'https://crests.football-data.org/86.png',
+                awayLogo: 'https://crests.football-data.org/81.png',
+                homeForm: ['W', 'W', 'D', 'W', 'W'],
+                awayForm: ['W', 'W', 'W', 'W', 'D'],
+                homeInjuries: [
+                    { player: 'Eder Militao', injury: 'ACL - Season Out' }
+                ],
+                awayInjuries: [
+                    { player: 'Pedri', injury: 'Thigh - Doubtful' }
+                ],
+                homeAdvantage: {
+                    text: 'Real Madrid at Santiago Bernabéu - a fortress with 82% win rate.',
+                    winRate: '82%',
+                    goals: '2.6',
+                    cleanSheets: '50%'
+                }
+            },
+            'Valencia vs Atletico Madrid': {
+                homeTeam: 'Valencia',
+                awayTeam: 'Atletico Madrid',
+                homeLogo: 'https://crests.football-data.org/90.png',
+                awayLogo: 'https://crests.football-data.org/78.png',
+                homeForm: ['L', 'D', 'L', 'W', 'L'],
+                awayForm: ['W', 'D', 'W', 'W', 'D'],
+                homeInjuries: [
+                    { player: 'Jose Gaya', injury: 'Ankle - Out' }
+                ],
+                awayInjuries: [],
+                homeAdvantage: {
+                    text: 'Valencia at Mestalla with moderate home form this season.',
+                    winRate: '55%',
+                    goals: '1.8',
+                    cleanSheets: '35%'
+                }
+            },
+            'Atletico Madrid vs Sevilla': {
+                homeTeam: 'Atletico Madrid',
+                awayTeam: 'Sevilla',
+                homeLogo: 'https://crests.football-data.org/78.png',
+                awayLogo: 'https://crests.football-data.org/559.png',
+                homeForm: ['W', 'D', 'W', 'W', 'D'],
+                awayForm: ['L', 'D', 'L', 'W', 'L'],
+                homeInjuries: [
+                    { player: 'Stefan Savic', injury: 'Back - Doubtful' }
+                ],
+                awayInjuries: [
+                    { player: 'Jesus Navas', injury: 'Hip - Out' },
+                    { player: 'Fernando', injury: 'Muscle - 1 week' }
+                ],
+                homeAdvantage: {
+                    text: 'Atletico Madrid at Wanda Metropolitano with solid defensive record.',
+                    winRate: '75%',
+                    goals: '2.1',
+                    cleanSheets: '58%'
+                }
+            },
+            'Bayern Munich vs Dortmund': {
+                homeTeam: 'Bayern Munich',
+                awayTeam: 'Dortmund',
+                homeLogo: 'https://crests.football-data.org/5.png',
+                awayLogo: 'https://crests.football-data.org/4.png',
+                homeForm: ['W', 'W', 'W', 'D', 'W'],
+                awayForm: ['W', 'L', 'W', 'D', 'W'],
+                homeInjuries: [
+                    { player: 'Manuel Neuer', injury: 'Shoulder - Doubtful' }
+                ],
+                awayInjuries: [
+                    { player: 'Sebastien Haller', injury: 'Ankle - Out' }
+                ],
+                homeAdvantage: {
+                    text: 'Bayern Munich at Allianz Arena - one of Europe\'s most intimidating venues.',
+                    winRate: '88%',
+                    goals: '3.2',
+                    cleanSheets: '52%'
+                }
+            },
+            'RB Leipzig vs Bayern Munich': {
+                homeTeam: 'RB Leipzig',
+                awayTeam: 'Bayern Munich',
+                homeLogo: 'https://crests.football-data.org/721.png',
+                awayLogo: 'https://crests.football-data.org/5.png',
+                homeForm: ['W', 'D', 'W', 'W', 'L'],
+                awayForm: ['W', 'W', 'W', 'D', 'W'],
+                homeInjuries: [
+                    { player: 'Dani Olmo', injury: 'Thigh - Out' }
+                ],
+                awayInjuries: [],
+                homeAdvantage: {
+                    text: 'RB Leipzig at Red Bull Arena with strong pressing style.',
+                    winRate: '68%',
+                    goals: '2.4',
+                    cleanSheets: '45%'
+                }
+            },
+            'Juventus vs AC Milan': {
+                homeTeam: 'Juventus',
+                awayTeam: 'AC Milan',
+                homeLogo: 'https://crests.football-data.org/109.png',
+                awayLogo: 'https://crests.football-data.org/98.png',
+                homeForm: ['W', 'D', 'W', 'W', 'D'],
+                awayForm: ['W', 'W', 'L', 'D', 'W'],
+                homeInjuries: [
+                    { player: 'Paul Pogba', injury: 'Suspension' },
+                    { player: 'Federico Chiesa', injury: 'ACL - Long term' }
+                ],
+                awayInjuries: [
+                    { player: 'Mike Maignan', injury: 'Calf - Doubtful' }
+                ],
+                homeAdvantage: {
+                    text: 'Juventus at Allianz Stadium with historic defensive strength.',
+                    winRate: '72%',
+                    goals: '2.0',
+                    cleanSheets: '62%'
+                }
+            },
+            'Inter vs Napoli': {
+                homeTeam: 'Inter',
+                awayTeam: 'Napoli',
+                homeLogo: 'https://crests.football-data.org/108.png',
+                awayLogo: 'https://crests.football-data.org/113.png',
+                homeForm: ['W', 'W', 'D', 'W', 'W'],
+                awayForm: ['W', 'D', 'W', 'W', 'L'],
+                homeInjuries: [],
+                awayInjuries: [
+                    { player: 'Victor Osimhen', injury: 'Hamstring - Out' }
+                ],
+                homeAdvantage: {
+                    text: 'Inter Milan at San Siro with excellent home record this season.',
+                    winRate: '80%',
+                    goals: '2.5',
+                    cleanSheets: '56%'
+                }
+            },
+            'PSG vs Marseille': {
+                homeTeam: 'PSG',
+                awayTeam: 'Marseille',
+                homeLogo: 'https://crests.football-data.org/524.png',
+                awayLogo: 'https://crests.football-data.org/516.png',
+                homeForm: ['W', 'W', 'W', 'W', 'D'],
+                awayForm: ['D', 'W', 'L', 'D', 'W'],
+                homeInjuries: [
+                    { player: 'Presnel Kimpembe', injury: 'Achilles - Long term' }
+                ],
+                awayInjuries: [
+                    { player: 'Amine Harit', injury: 'Knee - Out' }
+                ],
+                homeAdvantage: {
+                    text: 'PSG at Parc des Princes - Le Classique with dominant home form.',
+                    winRate: '85%',
+                    goals: '2.9',
+                    cleanSheets: '48%'
+                }
+            },
+            'Man City vs Inter Milan': {
+                homeTeam: 'Man City',
+                awayTeam: 'Inter Milan',
+                homeLogo: 'https://crests.football-data.org/65.png',
+                awayLogo: 'https://crests.football-data.org/108.png',
+                homeForm: ['W', 'W', 'W', 'W', 'D'],
+                awayForm: ['W', 'W', 'D', 'W', 'W'],
+                homeInjuries: [],
+                awayInjuries: [
+                    { player: 'Romelu Lukaku', injury: 'Thigh - Doubtful' }
+                ],
+                homeAdvantage: {
+                    text: 'Man City at Etihad - Champions League powerhouse at home.',
+                    winRate: '92%',
+                    goals: '3.0',
+                    cleanSheets: '60%'
+                }
+            },
+            'Arsenal vs Sevilla': {
+                homeTeam: 'Arsenal',
+                awayTeam: 'Sevilla',
+                homeLogo: 'https://crests.football-data.org/57.png',
+                awayLogo: 'https://crests.football-data.org/559.png',
+                homeForm: ['W', 'W', 'W', 'D', 'W'],
+                awayForm: ['L', 'D', 'W', 'L', 'D'],
+                homeInjuries: [],
+                awayInjuries: [
+                    { player: 'Suso', injury: 'Ankle - Out' },
+                    { player: 'Marcos Acuna', injury: 'Hamstring - Doubtful' }
+                ],
+                homeAdvantage: {
+                    text: 'Arsenal at Emirates Stadium in top form this season.',
+                    winRate: '83%',
+                    goals: '2.7',
+                    cleanSheets: '58%'
+                }
+            }
+        };
+
+        // Prediction modal functions
+        async function openPredictionModal(homeTeam, awayTeam) {
+            const matchKey = `${homeTeam} vs ${awayTeam}`;
+            
+            // Try to get real API data first
+            let data = matchData[matchKey]; // Fallback to demo data
+            const apiMatch = allMatchesData[matchKey] || liveMatchesData[matchKey];
+            
+            if (apiMatch) {
+                // Fetch real team data from API
+                try {
+                    const homeTeamData = await fetchTeamData(apiMatch.homeTeam.id);
+                    const awayTeamData = await fetchTeamData(apiMatch.awayTeam.id);
+                    
+                    // Build data from API response
+                    data = {
+                        homeTeam: apiMatch.homeTeam.name,
+                        awayTeam: apiMatch.awayTeam.name,
+                        homeLogo: apiMatch.homeTeam.crest,
+                        awayLogo: apiMatch.awayTeam.crest,
+                        homeForm: extractTeamForm(homeTeamData),
+                        awayForm: extractTeamForm(awayTeamData),
+                        homeInjuries: extractInjuries(homeTeamData),
+                        awayInjuries: extractInjuries(awayTeamData),
+                        homeAdvantage: calculateHomeAdvantage(homeTeamData, apiMatch)
+                    };
+                } catch (error) {
+                    console.log('Using demo data for prediction');
+                }
+            }
+            
+            if (!data) {
+                alert('Match data not available. Please add API key for real-time data.');
+                return;
+            }
+
+            // Populate modal header
+            document.getElementById('modalMatchTitle').innerHTML = `
+                <div class="modal-team">
+                    <img src="${data.homeLogo}" alt="${data.homeTeam}" class="modal-team-logo">
+                    <div class="modal-team-name">${data.homeTeam}</div>
+                </div>
+                <div class="modal-vs">VS</div>
+                <div class="modal-team">
+                    <img src="${data.awayLogo}" alt="${data.awayTeam}" class="modal-team-logo">
+                    <div class="modal-team-name">${data.awayTeam}</div>
+                </div>
+            `;
+
+            // Populate team form
+            document.getElementById('teamForm').innerHTML = `
+                <div class="form-container">
+                    <div class="form-team-name">${data.homeTeam}</div>
+                    <div class="form-matches">
+                        ${data.homeForm.map(result => `
+                            <div class="form-badge ${result === 'W' ? 'win' : result === 'D' ? 'draw' : 'loss'}">
+                                ${result}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+                <div class="form-container">
+                    <div class="form-team-name">${data.awayTeam}</div>
+                    <div class="form-matches">
+                        ${data.awayForm.map(result => `
+                            <div class="form-badge ${result === 'W' ? 'win' : result === 'D' ? 'draw' : 'loss'}">
+                                ${result}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            // Populate injuries
+            const allInjuries = [
+                ...data.homeInjuries.map(inj => ({...inj, team: data.homeTeam})),
+                ...data.awayInjuries.map(inj => ({...inj, team: data.awayTeam}))
+            ];
+
+            if (allInjuries.length > 0) {
+                document.getElementById('injuriesList').innerHTML = allInjuries.map(inj => `
+                    <div class="injury-item">
+                        <div class="injury-player">${inj.player} (${inj.team})</div>
+                        <div class="injury-type">${inj.injury}</div>
+                    </div>
+                `).join('');
+            } else {
+                document.getElementById('injuriesList').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; color: #4caf50; padding: 20px;">
+                        ✓ No reported injuries for either team
+                    </div>
+                `;
+            }
+
+            // Populate home advantage
+            document.getElementById('homeAdvantage').innerHTML = `
+                <div class="advantage-text">${data.homeAdvantage.text}</div>
+                <div class="advantage-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">${data.homeAdvantage.winRate}</div>
+                        <div class="stat-label">Win Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.homeAdvantage.goals}</div>
+                        <div class="stat-label">Avg Goals</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">${data.homeAdvantage.cleanSheets}</div>
+                        <div class="stat-label">Clean Sheets</div>
+                    </div>
+                </div>
+            `;
+
+            // Calculate prediction
+            const prediction = calculatePrediction(data);
+            document.getElementById('predictionResult').innerHTML = `
+                <div class="prediction-title">🔮 AI Prediction</div>
+                <div class="prediction-outcome">${prediction.outcome}</div>
+                <div class="prediction-confidence">Confidence Level: ${prediction.confidence}%</div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: ${prediction.confidence}%"></div>
+                </div>
+                <div style="margin-top: 15px; font-size: 14px; opacity: 0.9;">
+                    ${prediction.reasoning}
+                </div>
+            `;
+
+            // Show modal
+            document.getElementById('predictionModal').classList.add('show');
+        }
+
+        function closePredictionModal() {
+            document.getElementById('predictionModal').classList.remove('show');
+        }
+
+        // Extract team form from API data
+        function extractTeamForm(teamData) {
+            if (!teamData || !teamData.runningCompetitions) {
+                return ['W', 'D', 'W', 'L', 'W']; // Default demo data
+            }
+            // In real API, you'd fetch last 5 matches
+            // This is a simplified version
+            return ['W', 'D', 'W', 'W', 'D'];
+        }
+
+        // Extract injury list from API data
+        function extractInjuries(teamData) {
+            if (!teamData || !teamData.squad) {
+                return [];
+            }
+            // Filter injured players (in real API, this data might be in different format)
+            const injuries = [];
+            // Note: football-data.org API doesn't always provide injury data
+            // You may need additional APIs like RapidAPI's Football API
+            return injuries;
+        }
+
+        // Calculate home advantage statistics
+        function calculateHomeAdvantage(teamData, match) {
+            if (!teamData) {
+                return {
+                    text: `${match.homeTeam.name} playing at home with good support.`,
+                    winRate: '70%',
+                    goals: '2.2',
+                    cleanSheets: '45%'
+                };
+            }
+
+            return {
+                text: `${teamData.name} at ${teamData.venue || 'home stadium'} with strong home record.`,
+                winRate: '75%',
+                goals: '2.4',
+                cleanSheets: '50%'
+            };
+        }
+
+        function calculatePrediction(data) {
+            let homeScore = 0;
+            let awayScore = 0;
+
+            // Form analysis (max 5 points each)
+            homeScore += data.homeForm.filter(r => r === 'W').length;
+            awayScore += data.awayForm.filter(r => r === 'W').length;
+
+            // Home advantage (add 2 points)
+            homeScore += 2;
+
+            // Injury impact (deduct 1 point per injury)
+            homeScore -= data.homeInjuries.length;
+            awayScore -= data.awayInjuries.length;
+
+            // Determine outcome
+            let outcome, confidence, reasoning;
+            
+            if (homeScore > awayScore + 1) {
+                outcome = `${data.homeTeam} Win`;
+                confidence = Math.min(65 + (homeScore - awayScore) * 5, 90);
+                reasoning = `Strong home form, advantage, and fewer injuries give ${data.homeTeam} the edge.`;
+            } else if (awayScore > homeScore + 1) {
+                outcome = `${data.awayTeam} Win`;
+                confidence = Math.min(65 + (awayScore - homeScore) * 5, 90);
+                reasoning = `Excellent away form overcomes home advantage. ${data.awayTeam} looks stronger.`;
+            } else {
+                outcome = 'Draw or Close Match';
+                confidence = 60;
+                reasoning = 'Both teams evenly matched. Expect a competitive, close game.';
+            }
+
+            return { outcome, confidence, reasoning };
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('predictionModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closePredictionModal();
+            }
+        });
+
+        // Add click handlers to all prediction buttons
+        document.querySelectorAll('.match-prediction').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const matchCard = this.closest('.match-card');
+                const teamNames = matchCard.querySelectorAll('.team-name');
+                if (teamNames.length >= 2) {
+                    const homeTeam = teamNames[0].textContent.trim();
+                    const awayTeam = teamNames[1].textContent.trim();
+                    openPredictionModal(homeTeam, awayTeam);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
